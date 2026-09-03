@@ -41,20 +41,20 @@ T-001, T-002, T-005, T-006, T-007, T-008, T-056, T-092, T-093. All settled.
 ## Checklist
 
 ### 0.0.0 — the probes
-- [ ] `probe/01_borrow_struct.npk` — a struct holding `Buffer->`, built by literal, passed down two levels, **not** returned (T-056)
-- [ ] `probe/02_borrow_return.npk` — the same struct **returned** from a function; **expected to be refused**, with the code recorded
-- [ ] `probe/03_pod_array.npk` — a `Vec<Cell32>` of 12 000 32-byte POD values: fill, read, copy, clear
-- [ ] `probe/04_payload_enum.npk` — a tagged enum with `Char(char32)` and `F(uint8)` payloads, destructured in a `pick`, stored in a fixed array
-- [ ] `probe/05_generic_move.npk` — `move T:v` into a generic container, with `T` both scalar and owning
-- [ ] `probe/06_inherent_generic.npk` — `impl:<T>:Vec<T> = { … }` with a `Vec<T>->:self` receiver that mutates
-- [ ] `probe/07_trait_selfptr.npk` — a trait with a `Self->` receiver, implemented on two structs, called through a generic bound
-- [ ] `probe/08_async_trait.npk` — an `async` trait method driven through a generic bound and through `dyn`
-- [ ] `probe/09_sys_ioctl.npk` — a `buffer`-laid-out 36-byte structure handed to `ioctl(TCGETS)` through `sys`, read back field by field
-- [ ] `probe/10_sys_eventfd.npk` — `eventfd2`, `io_watch`, one `suspend_io` over two descriptors, a write and a wake
-- [ ] `probe/11_signalfd.npk` — `rt_sigprocmask` + `signalfd4`, a self-sent `SIGWINCH`, the 128-byte record read back
-- [ ] `probe/12_static_state.npk` — module-level `fixed` state with a mutable interior reached through an `atomic<int32>`, written from `failsafe`
-- [ ] `probe/13_failsafe_restore.npk` — a deliberate trap with a "restore" writing to a descriptor from `failsafe`, proving the trap path reaches it
-- [ ] `probe/14_string_bytes.npk` — `string_bytes` into a decoder, `string_from_bytes` back, with the borrow rules exercised at every edge
+- [ ] `probe/probe01_borrow_struct.npk` — a struct holding `Buffer->`, built by literal, passed down two levels, **not** returned (T-056)
+- [ ] `probe/probe02_borrow_return.npk` — the same struct **returned** from a function; **expected to be refused**, with the code recorded
+- [ ] `probe/probe03_pod_array.npk` — a `Vec<Cell32>` of 12 000 32-byte POD values: fill, read, copy, clear
+- [ ] `probe/probe04_payload_enum.npk` — a tagged enum with `Char(char32)` and `F(uint8)` payloads, destructured in a `pick`, stored in a fixed array
+- [ ] `probe/probe05_generic_move.npk` — `move T:v` into a generic container, with `T` both scalar and owning
+- [ ] `probe/probe06_inherent_generic.npk` — `impl:<T>:Vec<T> = { … }` with a `Vec<T>->:self` receiver that mutates
+- [ ] `probe/probe07_trait_selfptr.npk` — a trait with a `Self->` receiver, implemented on two structs, called through a generic bound
+- [ ] `probe/probe08_async_trait.npk` — an `async` trait method driven through a generic bound and through `dyn`
+- [ ] `probe/probe09_sys_ioctl.npk` — a `buffer`-laid-out 36-byte structure handed to `ioctl(TCGETS)` through `sys`, read back field by field
+- [ ] `probe/probe10_sys_eventfd.npk` — `eventfd2`, `io_watch`, one `suspend_io` over two descriptors, a write and a wake
+- [ ] `probe/probe11_signalfd.npk` — `rt_sigprocmask` + `signalfd4`, a self-sent `SIGWINCH`, the 128-byte record read back
+- [ ] `probe/probe12_static_state.npk` — module-level `fixed` state with a mutable interior reached through an `atomic<int32>`, written from `failsafe`
+- [ ] `probe/probe13_failsafe_restore.npk` — a deliberate trap with a "restore" writing to a descriptor from `failsafe`, proving the trap path reaches it
+- [ ] `probe/probe14_string_bytes.npk` — `string_bytes` into a decoder, `string_from_bytes` back, with the borrow rules exercised at every edge
 - [ ] a verdict line per probe recorded in `0.0.0.md`, with the exact diagnostic where one was refused
 - [ ] every design consequence written into `meta/specs/` **and** `meta/DECISIONS.md` before 0.0.1 starts
 
