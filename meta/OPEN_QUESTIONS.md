@@ -186,6 +186,13 @@ language is known to have a consumer here.
 
 - ~~**O-W1 — the `Tree` widget's node store.**~~ — **SETTLED, T-101.** See Q-2.
 - ~~**O-W2 — image protocols.**~~ — **SETTLED, T-102.** See Q-3.
+- **O-W4 — does the log viewer belong inside `nitpick-posix`?** A log viewer
+  with follow and search overlaps two POSIX utilities: `more` is the pager,
+  `tail -f` is the follow. **Recommendation: its own repository**, because a
+  pager exercises the screen model and input and almost no widgets, where a
+  viewer with a filter bar and a status line exercises the whole stack — and
+  the point of a dogfood consumer is to exercise the whole stack. Decide at
+  cycle 0.15's open, before the program exists.
 - **O-W3 — accessibility.** A screen reader reads the terminal, not the
   program, so the library's contribution is emitting text in a sensible order
   and keeping the cursor where the focus is — both assertable by the golden

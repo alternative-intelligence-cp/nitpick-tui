@@ -9,9 +9,19 @@ The library's own examples demonstrate features; a program with a purpose finds
 what is missing, what is awkward, and what is wrong — and it finds it before a
 1.0 that would have to keep it.
 
-This is **T-104**, in this repository rather than a separate one, so the program
-moves with the API and a breaking change breaks it in the same commit rather
-than six months later.
+This is **T-104**, as amended by **T-114**: the program lives in
+[`nitpick-apps`](https://github.com/alternative-intelligence-cp/nitpick-apps),
+the application workbench, not in this repository's `examples/`. A consumer is
+a real program with its own lifetime, and `examples/` would make one that
+outgrows this library move, and one that consumes three libraries pick a
+parent.
+
+**O-W4 is settled at this cycle's open**, before the program exists: its own
+repository, or inside `nitpick-posix` beside `more` and `tail`.
+
+The import is by relative path to `../../nitpick-libs/nitpick-tui/src/lib.npk`
+until the compiler's dependency resolution lands (O-N2), with a comment at the
+site naming the open question.
 
 ## What to build
 
@@ -42,6 +52,7 @@ weak:
 ## Checklist
 
 ### 0.15.0 — the program
+- [ ] the repository created (O-W4 answered first), registered in `nitpick-apps`' `APPS.md`, with its GitHub description and topics set in the same pass
 - [ ] written **without changing the library**, so that every friction is recorded rather than smoothed over as it appears
 - [ ] every awkwardness written down as it is met, numbered, with the line of code that caused it
 - [ ] runs over SSH, in `tmux`, in a terminal resized while following, and with a 1 GB log

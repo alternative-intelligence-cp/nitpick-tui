@@ -764,3 +764,31 @@ blocks seven signals, owns the terminal, and restores the mask at teardown and
 around every suspend. The transferable rule is not "block `SIGPIPE`" — it is
 **know what the default disposition is**, and neither library did until it was
 measured.
+
+### T-114 — the dogfood application moves to `nitpick-apps`, superseding T-104's location
+**2026-09-03.** T-104 settled that cycle 0.15's log viewer would live in this
+repository's `examples/`. **The location is superseded**; the choice of program
+and everything else T-104 says stands.
+
+Consumers now live in
+[`nitpick-apps`](https://github.com/alternative-intelligence-cp/nitpick-apps),
+the application workbench, alongside `nitpick-parse`'s linter and
+`nitpick-regex`'s and `nitpick-time`'s utilities. The reasoning is the author's
+and it is better than T-104's: a consumer is a real program with its own
+lifetime, and `examples/` makes a program that outgrows the library that
+motivated it move, and a program that consumes three libraries pick a parent.
+
+*What does not change:* cycle 0.15 is still gated on the program **existing and
+being used**, not on it compiling; the findings are still triaged into defect,
+gap or accepted cost; and an accepted cost that nobody warned about is still a
+defect in the documentation.
+
+*One sub-choice deliberately left open (O-W4):* a log viewer with follow and
+search overlaps two POSIX utilities — `more` is a pager and `tail -f` is the
+follow — so it may belong **inside `nitpick-posix`** rather than in a
+repository of its own. Deciding that is cheaper before the program exists than
+after, and it is worth deciding on what actually exercises this library: a
+pager exercises the screen model and input but almost no widgets, where a log
+viewer with a filter bar and a status line exercises the whole stack. The
+recommendation is therefore its own repository, and the question is recorded
+rather than assumed.
