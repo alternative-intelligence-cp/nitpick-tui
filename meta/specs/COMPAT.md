@@ -54,8 +54,9 @@ differ, the structures do not) and is the first port to consider.
 
 ## 3. The matrix
 
-Filled as fixtures are captured; the plan's cycle 0.6 fills the first rows and
-the release cycle fills the rest. Every cell is measured.
+Filled as fixtures are captured: cycle 0.3 captures the first input fixtures,
+cycle 0.4 measures the first capability rows, and cycle 0.16 completes the
+table. Every cell is measured.
 
 | Terminal | Tier | Colour | Kitty kbd | Sync | SGR mouse | Styled underline | Hyperlink |
 |---|---|---|---|---|---|---|---|

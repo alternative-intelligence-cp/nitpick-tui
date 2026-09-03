@@ -105,7 +105,7 @@ result is `n` empty rects at the area's origin.
 | `Percent(p)` | `avail * min(p, 100) / 100` | 0 | `avail` |
 | `Ratio(a, b)` | `avail * a / b` (b = 0 → 0) | 0 | `avail` |
 | `Max(k)` | `k` | 0 | `k` |
-| `Min(k)` | `k` | `k` | `avail` |
+| `Min(k)` | `k` | `k` | `avail` — it **grows** above its floor (T-110) |
 | `Fill(w)` | — | 0 | `avail` |
 
 All products are computed in `uint32` and the divisions truncate.
@@ -200,9 +200,12 @@ allocating one is the one examples use.
 
 ## 8. Open items
 
-- **O-L1 — whether `Min` should grow like `Fill(1)` or not grow at all.** As
-  specified it grows, which matches every flexbox-shaped system and is what
-  makes `[Min(10), Fixed(3)]` do the obvious thing. The alternative reading —
-  `Min` takes exactly its floor unless something else forces it larger —
-  produces layouts with unexpected trailing gaps. Recorded because the two
-  readings both occur in existing libraries and the choice must be one.
+- ~~**O-L1 — whether `Min` should grow like `Fill(1)` or not grow at all.**~~ —
+  **SETTLED (T-110): it grows**, with weight 1, which matches every
+  flexbox-shaped system and is what makes `[Min(10), Fixed(3)]` do the obvious
+  thing. The alternative reading — `Min` takes exactly its floor unless
+  something else forces it larger — produces layouts with unexplained trailing
+  gaps. Both readings occur in existing libraries, which is why the choice is
+  written down rather than discovered.
+
+*(No open items remain in this document.)*

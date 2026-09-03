@@ -7,8 +7,10 @@
 
 T-004 and `specs/WIDGET_MODEL.md` §3. Settled.
 
-**Open questions to settle:** Q-2 / O-W1 (the `Tree` widget's node store —
-recommendation: a trait over the application's own store).
+Plus **T-101**: `Tree` takes a model trait the application implements over its
+own data; the library ships no node store.
+
+**Open questions to settle:** none.
 
 ## Subcycles
 
@@ -60,7 +62,7 @@ recommendation: a trait over the application's own store).
 - [ ] three sizes, including one where the labels do not fit
 
 ### 0.12.5 — `Tree`
-- [ ] Q-2 decided and recorded
+- [ ] T-101 honoured: a model trait, and **no** shipped store — the examples carry a small in-memory implementation so the trivial case stays one line
 - [ ] the model interface: children of a node, a node's label, whether it has children
 - [ ] expansion state owned by the application, keyed by an application-supplied identity
 - [ ] indentation guides as a `LineSet`

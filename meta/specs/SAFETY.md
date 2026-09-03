@@ -126,7 +126,11 @@ error identities `ntui` declares is therefore a hard budget, and it is nine.**
 
 **Rule S-7.** Nine is a ceiling, not a target. A new identity is added only by
 a recorded decision, and the decision has to say why the failure is one a
-`failsafe` would treat differently from all nine. Where the distinction is for
+`failsafe` would treat differently from all nine. **It is also a MAJOR version
+change** (T-103): a new identity is a new mandatory arm in every consuming
+program's `failsafe`, which the compiler enforces, so it is a source break in
+every consumer. That is the practical teeth behind this budget — it is not a
+style guide, it is the thing that keeps the major version from moving. Where the distinction is for
 the caller rather than for the shutdown handler, it rides as a **detail field**
 on the value the call returns, not as a new error.
 
@@ -245,10 +249,8 @@ Stated once, here, and repeated in the public documentation:
   construction, and no range needs reserving. Recorded here because the
   question is asked every time somebody meets the error system, and the answer
   is "the scheme already handles it".
-- **O-S2 — whether `ntui_restore()` should also emit `DECSTR` (soft reset).**
-  Argument for: it repairs modes `ntui` never set but the application did.
-  Argument against: it repairs modes the *user's shell* set deliberately before
-  the program ran, and S-2's rule is to restore what we changed and nothing
-  else. Recommendation: no, and the escape hatch is that an application may
-  emit it from its own `failsafe` arm after the restore. Tracked in
-  `../OPEN_QUESTIONS.md`.
+- ~~**O-S2 — whether `ntui_restore()` should also emit `DECSTR`.**~~ —
+  **SETTLED (T-105): no.** A soft reset would repair modes the *user's shell*
+  set deliberately before the program ran, which is S-2's rule inverted. An
+  application that wants one emits it from its own `failsafe` arm after the
+  restore, where it is that application's decision and visible as such.

@@ -7,8 +7,11 @@ and `run`.** The first cycle whose output an application can hold.
 
 T-004, T-070 … T-074. Settled.
 
-**Open questions to settle:** O-E1 (may `view` fail? recommendation: yes, with
-widgets substituting rather than failing).
+Plus **T-111**: `view` returns `Result<NIL>` and may fail, while the widgets
+substitute rather than fail.
+
+**Open by design:** O-E2, a `Router` for multi-screen applications — added when
+a consumer asks, and cycle 0.15 is the first that can.
 
 ## Subcycles
 
@@ -31,7 +34,7 @@ widgets substituting rather than failing).
 - [ ] `Ctx` with exactly the requests in `specs/EVENT_MODEL.md` §2 — a closed set (T-071)
 - [ ] `run<P: Program>` generic and statically dispatched
 - [ ] `RunOpts`: `always_redraw`, `max_fps`, the three deadlines, the mouse mode, whether to enter the alternate screen
-- [ ] O-E1 decided and recorded
+- [ ] T-111 honoured: `view` returns `Result<NIL>`, and a widget handed malformed text substitutes rather than failing the frame
 
 ### 0.10.1 — the wait
 - [ ] `io_watch` on the tty, the signal fd and the eventfd; **one** `suspend_io` (E-5)

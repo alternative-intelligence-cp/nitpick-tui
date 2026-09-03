@@ -552,16 +552,16 @@ Summarised here; [`TESTING.md`](TESTING.md) §4 has the mechanism.
 
 ## 15. Open items
 
-- **O-I1 — whether `Char` should carry the *shifted* or the *unshifted*
-  codepoint on the legacy path.** Kitty says unshifted and gives the shifted
-  form separately; the legacy path only ever has the shifted one (`A` for
-  Shift+a). Recommendation: `code = Char('A')`, `mods = SHIFT` is **not**
-  synthesised — the legacy path reports `Char('A')` with no `SHIFT`, because
+- ~~**O-I1 — shifted or unshifted `Char` on the legacy path.**~~ — **SETTLED
+  (T-108).** The legacy path reports `Char('A')` with **no** `MOD_SHIFT`:
   inventing a modifier the terminal did not report is a lie a key binding will
-  trip over. Documented as a known asymmetry between protocols, and
-  `key_matches()` is the helper that papers over it for bindings.
-- **O-I2 — whether to request kitty bit 4** (report alternate keys) by default.
-  Recommendation: no; §5.5 has the reasoning.
+  trip over. The asymmetry between protocols is documented, and
+  `key_matches()` absorbs it **at the point of use** — a binding asks "is this
+  Shift+A" and the helper answers correctly under either encoding.
+- ~~**O-I2 — whether to request kitty bit 4** (report alternate keys) by
+  default.~~ — **SETTLED (T-109): no.** The cost is on every keystroke and only
+  a keyboard-remapping application needs them; §5.5 has the reasoning and
+  `Caps.kitty_flags` is the opt-in.
 - **O-I3 — key repeat on the legacy path.** Indistinguishable from a fast
   press; reported as `Press`. Only the kitty protocol can do better and it
   does.

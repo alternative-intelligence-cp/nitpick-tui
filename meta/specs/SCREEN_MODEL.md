@@ -34,7 +34,7 @@ of `text` are a `uint32` index into the owning buffer's **cluster pool**, and
 the cluster's bytes are there.
 
 The number is a measurement, not a guess, and the plan's step that sets it
-measures a corpus first (cycle 0.5). What is *not* negotiable is that `Cell`
+measures a corpus first (cycle 0.6.0). What is *not* negotiable is that `Cell`
 has no owning field: a `string` here would make the cell move-only (TYPE-046)
 and a grid of move-only cells cannot be copied, cleared, or diffed.
 

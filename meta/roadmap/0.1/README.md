@@ -23,8 +23,9 @@ questions; this cycle builds the answers.
 
 T-010 … T-018, and T-090. All settled.
 
-**Open questions to settle in this cycle:** O-S2 (should the restore also emit
-`DECSTR`?). Recommendation on file: no.
+Plus **T-105** from the second batch: the restore does **not** emit `DECSTR`.
+
+**Open questions to settle in this cycle:** none.
 
 ## Subcycles
 
@@ -71,7 +72,7 @@ T-010 … T-018, and T-090. All settled.
 - [ ] the write's retry loop bounded by `mono_now()` against 100 ms, abandoning the remainder
 - [ ] **the gate**: a program that enters raw mode, sets every mode bit, and traps; a wrapper script captures `stty -a` before and after and requires them equal
 - [ ] the same, with the trap inside `failsafe` itself (which exits 70 directly)
-- [ ] O-S2 decided and recorded
+- [ ] T-105 honoured: the restore emits no `DECSTR`, and a comment in the code says why
 
 ### 0.1.3 — raw mode
 - [ ] the edit applied to the **captured original**, never a constructed state (T-014)

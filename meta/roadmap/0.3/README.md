@@ -15,8 +15,11 @@ this cycle's whole suite is fixtures and property tests.
 
 T-030 … T-037, T-041, T-090. Settled.
 
-**Open questions to settle:** O-I1 (shifted vs unshifted `Char` on the legacy
-path), O-I2 (kitty bit 4 by default). Recommendations on file.
+Plus **T-108** (the legacy path synthesises no `SHIFT`; `key_matches()` absorbs
+the asymmetry at the point of use) and **T-109** (kitty bit 4 is not pushed by
+default).
+
+**Open questions to settle:** none.
 
 ## Subcycles
 
@@ -60,7 +63,7 @@ path), O-I2 (kitty bit 4 by default). Recommendations on file.
 - [ ] Alt: `ESC` + printable, `ESC` + UTF-8, `ESC` + control, and the eighth-bit form (I-19)
 - [ ] `ESC ESC` is two Escapes (I-18)
 - [ ] the escape timeout, driven by the caller's `now_ns`, at exactly the threshold and one nanosecond either side
-- [ ] O-I1 decided and recorded
+- [ ] T-108 honoured: a shifted letter on the legacy path is `Char('A')` with **no** `MOD_SHIFT`, and `key_matches()` is the helper that makes a binding work under both encodings
 
 ### 0.3.3 — kitty
 - [ ] every field of `CSI key : alt ; mods : event ; text u`, in every combination of present and absent
@@ -68,7 +71,7 @@ path), O-I2 (kitty bit 4 by default). Recommendations on file.
 - [ ] press, repeat and release
 - [ ] **the pairing test** (I-15): a decoder fed a stream from a terminal with bit 8 and without bit 16 produces no text, demonstrating why both are pushed together
 - [ ] the decoder accepts kitty shapes regardless of what was requested (I-16)
-- [ ] O-I2 decided and recorded
+- [ ] T-109 honoured: bit 4 is not pushed; `Caps.kitty_flags` is the opt-in
 
 ### 0.3.4 — mouse
 - [ ] SGR (1006): every button 0…2, buttons 8…11, the wheel's four directions, motion, drag, and the three modifier bits

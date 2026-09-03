@@ -173,10 +173,10 @@ and it appears in the header comment of every generated file. Upgrading it is a
 recorded decision with a regenerated table set and a re-run of the golden
 suite, because a width that changes is a rendering that changes.
 
-> The version to pin is **the latest published UCD at the time cycle 0.2
-> runs**, and the plan records the one actually used rather than guessing now.
-> The floor is 15.1.0, below which `InCB` does not exist and rule GB9c cannot
-> be implemented.
+> **Settled as T-100:** the version is the latest stable UCD at the time cycle
+> 0.2 runs — recorded there rather than guessed now — with a hard floor of
+> **15.1.0**, below which `InCB` does not exist and rule GB9c cannot be
+> implemented at all.
 
 **Rule X-17 — the representation is a sorted range array with binary search.**
 
@@ -224,12 +224,12 @@ decoder cannot produce them anyway).
 
 ## 7. Open items
 
-- **O-X1 — the Unicode version to pin.** Decided at cycle 0.2 against what is
-  published then; floor 15.1.0. Tracked in `../OPEN_QUESTIONS.md`.
-- **O-X2 — whether `width()` should take the cluster or the base codepoint in
-  its public signature.** Cluster is correct (rules 3 and 4 need it) and costs
-  a slice; codepoint is what callers reach for. Recommendation: the public API
-  is `text_width(uint8[]) → uint32` over a whole string and
-  `cluster_width(uint8[]) → uint8` over one cluster, and the codepoint form is
-  internal — a caller who has a bare codepoint has already lost the
-  information the rules need.
+- ~~**O-X1 — the Unicode version to pin.**~~ — **SETTLED (T-100):** the latest
+  stable UCD at cycle 0.2, floor 15.1.0, recorded in `src/unicode/version.npk`.
+- ~~**O-X2 — cluster or codepoint in the public width signature.**~~ —
+  **SETTLED (T-106):** the public surface is `text_width(uint8[]) → uint32`
+  over a string and `cluster_width(uint8[]) → uint8` over one cluster. The
+  codepoint form stays internal, because a caller holding a bare codepoint has
+  already lost the variation selector that rules 3 and 4 need.
+
+*(No open items remain in this document.)*

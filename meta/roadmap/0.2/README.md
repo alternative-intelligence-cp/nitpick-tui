@@ -15,8 +15,12 @@ cleanest tests in the plan.
 
 T-020 … T-025, T-093. Settled.
 
-**Open questions to settle:** Q-1 / O-X1 (the Unicode version to pin) and O-X2
-(cluster or codepoint in the public width signature).
+Plus **T-100** (the Unicode version: the latest stable UCD at this cycle, floor
+15.1.0, in one file) and **T-106** (`text_width` and `cluster_width` are the
+public surface; the codepoint form stays internal).
+
+**Open questions to settle:** none. What this cycle still *records* is the
+version it actually pinned — a fact, not a decision.
 
 ## Subcycles
 
@@ -31,7 +35,7 @@ T-020 … T-025, T-093. Settled.
 ## Checklist
 
 ### 0.2.0 — the generator
-- [ ] Q-1 answered: the UCD version pinned, recorded in `src/unicode/version.npk`
+- [ ] T-100 executed: the latest stable UCD pinned (floor 15.1.0), recorded in `src/unicode/version.npk`, and the version noted in `meta/DECISIONS.md` beside T-100
 - [ ] `tools/gen_unicode.py` reads `UnicodeData.txt`, `EastAsianWidth.txt`, `emoji-data.txt`, `DerivedCoreProperties.txt`, `GraphemeBreakProperty.txt`
 - [ ] the UCD files themselves are **gitignored** (they are large and reproducible); the generated tables are **committed**
 - [ ] the emitted shape is `Range32 { uint32:lo; uint32:hi; }` arrays, sorted and disjoint (X-17)
@@ -52,7 +56,7 @@ T-020 … T-025, T-093. Settled.
 - [ ] the algorithm's eight steps implemented in order, each with its own test
 - [ ] controls refused; `U+0000` handled; VS16 and VS15; `Emoji_Presentation`; EAW W/F; `Mn`/`Me`/`Cf`/`Default_Ignorable`; the default 1
 - [ ] `Caps.ambiguous_wide` promotes the `A` class, and defaults off
-- [ ] `text_width(uint8[])` and `cluster_width(uint8[])` — O-X2 decided
+- [ ] `text_width(uint8[])` and `cluster_width(uint8[])` are the public surface (T-106); the codepoint form is internal to `src/unicode/`
 - [ ] the ZWJ static rule (2), with the calibration hooks present and unwired (0.4 wires them)
 - [ ] `width()` is total: it answers for every `uint32`, including values above U+10FFFF
 - [ ] a test that walks every codepoint 0…0x10FFFF and asserts the result is 0, 1 or 2 — nothing else, ever
@@ -66,7 +70,7 @@ T-020 … T-025, T-093. Settled.
 - [ ] a `prove`-shaped comment: the cluster end is strictly greater than the start, so the loop terminates (P-7)
 
 ### 0.2.4 — close
-- [ ] O-X1 and O-X2 recorded as decisions
+- [ ] the pinned version recorded beside T-100
 - [ ] findings written; `0.3.0.md` written; archived
 
 ## Gate

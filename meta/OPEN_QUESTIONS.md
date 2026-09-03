@@ -10,48 +10,40 @@ lives only in a conversation. Three prefixes:
 | `Q-` | the **user's** — a question that wants an answer before the work it gates begins |
 
 A question that gets answered moves to `DECISIONS.md` as a numbered decision and
-is struck through here with the decision's number, never deleted.
+is struck through here with the decision's number, **never deleted** — the
+question is part of the record of how the answer was reached.
+
+**The second batch (T-100 … T-112) was ratified on 2026-09-03** and struck
+thirteen of these. What remains open is what should be: three measurements,
+one set of data, one item gated on the compiler's tooling, one waiting for a
+consumer to ask, and the four that are the compiler's rather than ours.
 
 ---
 
 ## Q — for the user
 
-### Q-1 — the Unicode version to pin
-Decided at cycle 0.2 against what is published then; the floor is **15.1.0**,
-below which `InCB` does not exist and the Indic conjunct rule GB9c cannot be
-implemented. Not really a preference question — the answer is "the latest
-stable UCD when 0.2 runs" — but it is recorded because the version becomes a
-committed constant that changes rendering when it moves.
-**Recommendation:** latest stable at 0.2, recorded in `src/unicode/version.npk`.
+### ~~Q-1 — the Unicode version to pin~~ — **SETTLED, T-100**
+The recommendation as written: the latest stable UCD at cycle 0.2, floor
+15.1.0, recorded in `src/unicode/version.npk`, and upgrading it is a decision
+with a regenerated table set and a re-run golden suite.
 
-### Q-2 — whether `ntui` should ship a `Tree` widget's node store
-`WIDGET_MODEL.md` O-W1. Shipping an `arena<T>`-backed store is less work for
-the application; taking a trait over the application's own store means a file
-browser over a real directory tree does not have to mirror it first.
-**Recommendation:** the trait. Decide at cycle 0.12.
+### ~~Q-2 — whether `ntui` should ship a `Tree` widget's node store~~ — **SETTLED, T-101**
+The trait, over the application's own data. A file browser over a real
+directory tree does not have to mirror it into an arena first.
 
-### Q-3 — image protocols (Kitty graphics, Sixel, iTerm2 inline)
-Out of scope at 1.0 and recorded as wanted. `Caps.sixel` is already carried so
-the detection is not re-litigated later. It is a cycle of its own: the three
-protocols disagree about placement, scrolling and lifetime, and the cell model
-has to learn about a region it does not own.
-**Recommendation:** post-1.0, as cycle 1.1, with its own decision batch.
+### ~~Q-3 — image protocols (Kitty graphics, Sixel, iTerm2 inline)~~ — **SETTLED, T-102**
+Post-1.0, as cycle 1.1, opening with its own decision batch. `Caps.sixel` is
+carried from cycle 0.4 so the detection is not re-litigated then.
 
-### Q-4 — the release cadence and versioning
-`ntui` has no consumers yet, so nothing forces an answer. The compiler restarts
-its own version at 0.0 after the switch.
-**Recommendation:** `0.x` until the compiler reaches 1.0 and the API has
-survived one real application; semantic versioning thereafter, with the
-`failsafe` arm list treated as part of the public API — adding an error
-identity is a **major** version change, because it breaks every consumer's
-compilation.
+### ~~Q-4 — the release cadence and versioning~~ — **SETTLED, T-103**
+`0.x` until the compiler reaches 1.0 and the API has survived cycle 0.15's
+application; semantic versioning thereafter; and **adding a public error
+identity is a major version**, because REACH-002 makes it a new mandatory
+`failsafe` arm in every consumer — a compiler-enforced source break.
 
-### Q-5 — whether to build a second library alongside as a consumer
-The library's own examples are its first consumer, and they are weak evidence:
-an example is written by the person who wrote the API. A real program — a log
-viewer, a process monitor, a `git` interface — exercises it honestly.
-**Recommendation:** yes, at cycle 0.14, in this repository under `examples/`
-rather than as a separate repository, so it moves with the API.
+### ~~Q-5 — whether to build a real program as a consumer~~ — **SETTLED, T-104**
+Yes: cycle 0.15, a log viewer, in `examples/` in this repository so it moves
+with the API. Every friction it meets is recorded and triaged.
 
 ---
 
@@ -105,12 +97,10 @@ language is known to have a consumer here.
   from `module.Name` by D-179's FNV scheme and cannot collide. Recorded because
   the question is asked every time somebody meets the error system.
   **Answer: nothing to reserve.**
-- **O-S2 — should `ntui_restore()` also emit `DECSTR` (soft reset)?** For: it
-  repairs modes the *application* set that `ntui` does not know about.
-  Against: it also repairs modes the user's shell set deliberately before the
-  program ran, and the restore's rule is to undo what we changed and nothing
-  else. **Recommendation: no.** An application may emit it from its own
-  `failsafe` arm after the restore. Decide at cycle 0.3.
+- ~~**O-S2 — should `ntui_restore()` also emit `DECSTR` (soft reset)?**~~ —
+  **SETTLED, T-105: no.** It would repair modes the user's shell set
+  deliberately, which is the restore's own rule inverted. An application that
+  wants one emits it from its `failsafe` arm after the restore.
 
 ### The device
 
@@ -128,75 +118,74 @@ language is known to have a consumer here.
 - **O-B1 — when to migrate off the harness.** Gated on O-N2. **No action until
   then**; the harness and `npkg` run side by side with a parity check before
   the harness retires, exactly as in the compiler repository.
-- **O-B2 — ship as source or as an object.** A `.o` plus a declaration file
-  builds faster; source keeps the closed-world link and the whole-program
-  verification story. **Settled for now in favour of source**; revisit only if
-  build times become a real complaint.
+- ~~**O-B2 — ship as source or as an object.**~~ — **SETTLED, T-112: source.**
+  It keeps the closed-world link and whole-program verification intact.
+  Revisit only if build times become a real complaint from someone building a
+  real program.
 
 ### Text
 
-- **O-X1 — the Unicode version.** See Q-1.
-- **O-X2 — should `width()` take a cluster or a codepoint in the public API?**
-  **Recommendation:** the public surface is `text_width(uint8[])` over a string
-  and `cluster_width(uint8[])` over one cluster; the codepoint form stays
-  internal, because a caller holding a bare codepoint has already lost the
-  information rules 3 and 4 need. Decide at cycle 0.2.
+- ~~**O-X1 — the Unicode version.**~~ — **SETTLED, T-100.** See Q-1.
+- ~~**O-X2 — cluster or codepoint in the public width API?**~~ — **SETTLED,
+  T-106: `text_width(uint8[])` and `cluster_width(uint8[])`.** The codepoint
+  form stays internal, because a caller holding a bare codepoint has already
+  lost the variation selector that rules 3 and 4 need.
 
 ### Capabilities
 
-- **O-C1 — the initial capability table's contents.** Data, filled at cycle 0.6
-  against the real matrix. Not a design question.
-- **O-C2 — probe `DECRQM ?1049`?** **Recommendation: no.** The alternate screen
-  is universal enough that the query costs more than it buys, and a terminal
+- **O-C1 — the initial capability table's contents.** **Open by design:** it is
+  *data*, written at cycle 0.4 against real terminals and completed at 0.16,
+  not a preference anybody can settle in advance.
+- ~~**O-C2 — probe `DECRQM ?1049`?**~~ — **SETTLED, T-107: no.** The alternate
+  screen is universal enough that the query buys nothing, and a terminal
   without it ignores both the enter and the leave.
 
 ### Input
 
-- **O-I1 — shifted vs unshifted `Char` on the legacy path.** The legacy path
-  only ever sees the shifted form (`A` for Shift+a) and cannot know a modifier
-  was involved. **Recommendation:** report `Char('A')` with **no** `SHIFT`,
-  because synthesising a modifier the terminal did not report is a lie a key
-  binding will trip over. Document the asymmetry between protocols and provide
-  `key_matches()` as the helper bindings use. Decide at cycle 0.4.
-- **O-I2 — request kitty bit 4 (alternate keys) by default?**
-  **Recommendation: no.** It adds shifted and base-layout codepoints to every
-  event and only a keyboard-remapping application needs them;
-  `Caps.kitty_flags` can add it.
+- ~~**O-I1 — shifted vs unshifted `Char` on the legacy path.**~~ — **SETTLED,
+  T-108.** Report `Char('A')` with **no** `SHIFT`: synthesising a modifier the
+  terminal did not report is a lie a key binding will trip over. The asymmetry
+  between protocols is documented, and `key_matches()` absorbs it at the point
+  of use.
+- ~~**O-I2 — request kitty bit 4 (alternate keys) by default?**~~ —
+  **SETTLED, T-109: no.** The cost is on every keystroke and only a
+  keyboard-remapping application needs it; `Caps.kitty_flags` can add it.
 - **O-I3 — key repeat on the legacy path.** Indistinguishable from a fast
   press; reported as `Press`. Only the kitty protocol can do better and it
   does. **No action.**
 
 ### Screen and style
 
-- **O-R1 — the inline cluster size (14 bytes).** A measurement, not a guess:
-  cycle 0.5 measures a corpus of real terminal content and records the number
-  it chose. What is not negotiable is that `Cell` has no owning field.
-- **O-R2 — `NTUI_GAP` (8) and `NTUI_EL_MIN` (4).** Chosen from sequence
-  lengths, to be confirmed by the renderer benchmark at cycle 0.7. Changing
-  either re-records every golden, which is the right amount of friction.
+- **O-R1 — the inline cluster size (14 bytes).** **Open by design:** it is a
+  *measurement*, taken at cycle 0.6.0 over a corpus of real terminal content,
+  and the number chosen is recorded there with the corpus. What is not
+  negotiable, and is not open, is that `Cell` has no owning field.
+- **O-R2 — `NTUI_GAP` (8) and `NTUI_EL_MIN` (4).** **Open by design:** chosen
+  from sequence lengths and *confirmed by measurement* at cycle 0.8.0, against
+  emitted-byte counts on a corpus of realistic frames. Changing either
+  re-records every golden, which is the right amount of friction.
 
 ### Layout
 
-- **O-L1 — does `Min(k)` grow above its floor?** As specified it does, like
-  `Fill(1)`, which is what makes `[Min(10), Fixed(3)]` do the obvious thing.
-  The alternative reading produces layouts with unexpected trailing gaps. Both
-  readings occur in existing libraries. **Recommendation: it grows.** Decide at
-  cycle 0.9.
+- ~~**O-L1 — does `Min(k)` grow above its floor?**~~ — **SETTLED, T-110: it
+  grows**, like `Fill(1)`, which is what makes `[Min(10), Fixed(3)]` do the
+  obvious thing. The alternative reading produces layouts with unexplained
+  trailing gaps.
 
 ### Runtime
 
-- **O-E1 — may `view` fail?** As specified it returns `Result<NIL>` like
-  everything else. **Recommendation:** it may, and the *widgets* substitute
-  rather than fail, so the failure path exists but is not the ordinary one.
-- **O-E2 — a `Router` for multi-screen applications.** Composition is currently
-  the application's, through its own screen enum. **Recommendation:** defer
-  until something written against the library asks for it — the examples being
-  the first thing to ask. Revisit at cycle 0.14.
+- ~~**O-E1 — may `view` fail?**~~ — **SETTLED, T-111: yes, and the widgets
+  substitute rather than fail.** The failure path exists for an application
+  that wants it; a bad byte in a label does not abandon the frame.
+- **O-E2 — a `Router` for multi-screen applications.** **Open by design:**
+  composition is the application's today, through its own screen enum, and a
+  helper is added when a consumer asks rather than in anticipation. Cycle 0.15
+  is the first consumer that can ask, so it is revisited in 0.15.1's triage.
 
 ### Widgets
 
-- **O-W1 — the `Tree` widget's node store.** See Q-2.
-- **O-W2 — image protocols.** See Q-3.
+- ~~**O-W1 — the `Tree` widget's node store.**~~ — **SETTLED, T-101.** See Q-2.
+- ~~**O-W2 — image protocols.**~~ — **SETTLED, T-102.** See Q-3.
 - **O-W3 — accessibility.** A screen reader reads the terminal, not the
   program, so the library's contribution is emitting text in a sensible order
   and keeping the cursor where the focus is — both assertable by the golden

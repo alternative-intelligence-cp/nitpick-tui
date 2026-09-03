@@ -14,8 +14,11 @@ stops being a decision and becomes code.
 
 T-003, T-024, T-034, and C-1 … C-14 in `specs/CAPABILITIES.md`. Settled.
 
-**Open questions to settle:** O-C1 (the table's initial contents — data, not
-design), O-C2 (probe `?1049`? recommendation: no).
+Plus **T-107**: no DECRQM probe for `?1049`.
+
+**Open by design:** O-C1, the table's initial contents — *data*, written here
+against real terminals and completed at 0.16, not a preference anybody can
+settle in advance.
 
 ## Subcycles
 

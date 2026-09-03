@@ -199,17 +199,17 @@ of a spinner is a test at a stated frame number.
 
 ## 8. Open items
 
-- **O-W1 — the `Tree` widget's model.** A collapsible tree needs a node store,
-  and `arena<T>` + `Handle<T>` is what the language provides for graph-shaped
-  data. Whether `ntui` ships the store or takes a trait the application
-  implements over its own store is open; recommendation is the trait, so a
-  file browser over a real directory tree does not have to mirror it into an
-  arena first.
-- **O-W2 — image protocols** (Kitty graphics, Sixel, iTerm2 inline). Out of
-  scope at 1.0, recorded as wanted, and `Caps.sixel` is already carried so the
-  detection is not re-litigated later. It is its own cycle: the protocols
-  disagree about placement, scrolling and lifetime, and the cell model has to
-  learn about a region it does not own.
+- ~~**O-W1 — the `Tree` widget's model.**~~ — **SETTLED (T-101): a trait the
+  application implements over its own data.** `arena<T>` + `Handle<T>` remains
+  available to an application that wants a store, but the library does not
+  impose one — a file browser over a real directory tree would otherwise have
+  to maintain two representations of the same hierarchy and keep them in sync.
+- ~~**O-W2 — image protocols** (Kitty graphics, Sixel, iTerm2 inline).~~ —
+  **SETTLED (T-102): post-1.0, as cycle 1.1, with its own decision batch.** The
+  protocols disagree about placement, scrolling and lifetime, and the cell
+  model has to learn about a region it does not own — which touches the diff,
+  the damage model and the scroll path at once. `Caps.sixel` is carried from
+  cycle 0.4 so the detection is not re-litigated then.
 - **O-W3 — accessibility.** A screen reader on a TUI reads the terminal, not
   the program, so the library's contribution is to emit text in a sensible
   order and to keep the cursor where the focus is. Both are properties the

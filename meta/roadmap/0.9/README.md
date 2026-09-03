@@ -8,8 +8,9 @@ remainder rule.
 
 T-060, T-061. Settled.
 
-**Open questions to settle:** O-L1 (does `Min(k)` grow above its floor?
-recommendation: yes).
+Plus **T-110**: `Min(k)` grows above its floor with weight 1, like `Fill(1)`.
+
+**Open questions to settle:** none.
 
 ## Subcycles
 
@@ -40,7 +41,7 @@ recommendation: yes).
 - [ ] positions: `pos_{i+1} = pos_i + size_i + g`
 - [ ] `Ratio` with a zero denominator is 0, not a division
 - [ ] `Percent` above 100 clamps
-- [ ] O-L1 decided and recorded
+- [ ] T-110 honoured: `Min(k)` participates in the surplus distribution with weight 1, and `[Min(10), Fixed(3)]` has a test asserting the obvious answer
 - [ ] **no floating point anywhere** — a tree check greps for `flt32`/`flt64` in `src/layout/`
 
 ### 0.9.2 — the invariants

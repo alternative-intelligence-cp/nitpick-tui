@@ -243,9 +243,9 @@ which is where a test can see it.
 
 ## 8. Open items
 
-- **O-C1 — the initial capability table's contents.** Filled at cycle 0.6
-  against a real matrix (`COMPAT.md`); the rows are data and the plan says who
-  they are checked against. Not a design question.
-- **O-C2 — whether to probe DECRQM for `?1049`.** The alternate screen is
-  universal enough that a query costs more than it buys, and a terminal without
-  it will simply ignore the enter and the leave. Recommendation: no probe.
+- **O-C1 — the initial capability table's contents.** **Open by design:** the
+  rows are *data*, written at cycle 0.4 against a real matrix (`COMPAT.md`) and
+  completed at 0.16. Not a design question and not settleable in advance.
+- ~~**O-C2 — whether to probe DECRQM for `?1049`.**~~ — **SETTLED (T-107): no
+  probe.** The alternate screen is universal enough that the query buys
+  nothing, and a terminal without it ignores both the enter and the leave.

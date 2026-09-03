@@ -9,8 +9,9 @@ The library's own examples demonstrate features; a program with a purpose finds
 what is missing, what is awkward, and what is wrong — and it finds it before a
 1.0 that would have to keep it.
 
-This is Q-5's answer, in this repository rather than a separate one, so the
-program moves with the API.
+This is **T-104**, in this repository rather than a separate one, so the program
+moves with the API and a breaking change breaks it in the same commit rather
+than six months later.
 
 ## What to build
 
@@ -50,6 +51,7 @@ weak:
 - [ ] every finding classified: **defect** (the library is wrong), **gap** (the library is missing something a consumer reasonably needs), or **cost** (the library is right and this is what the design costs)
 - [ ] every `cost` written into the documentation, because an accepted cost nobody warned about is a defect in the documentation
 - [ ] every `gap` sized, and either scheduled into 0.16 or recorded as post-1.0
+- [ ] **O-E2 revisited**: did this application want a `Router`? A decision either way, with the code that would have used it
 
 ### 0.15.2 — the fixes
 - [ ] the defects fixed, each with a regression test

@@ -4,7 +4,10 @@
 
 ## Decisions in
 
-Q-4 (the version policy). To be settled here.
+**T-103** — the version policy, settled in the second batch: `0.x` until the
+compiler reaches 1.0 and the API has survived cycle 0.15's application, then
+semantic versioning, and **adding a public error identity is a major version**.
+This cycle *publishes* it; it does not decide it.
 
 ## Subcycles
 
@@ -14,7 +17,7 @@ Q-4 (the version policy). To be settled here.
 | 1.0.1 | **The `failsafe` contract** — the generated per-module arm list, published | a consumer knows exactly what importing costs |
 | 1.0.2 | **The guide** — `docs/`: getting started, the model, every widget, the terminal notes | a person can build an application from the documentation alone |
 | 1.0.3 | **Examples** — one per widget, plus the three architectural ones | every example built and run by the harness |
-| 1.0.4 | **Versioning** — Q-4 settled and written | a stated policy, including what a major version means |
+| 1.0.4 | **Versioning** — T-103 published | the policy stated where a consumer will read it, including what a major version means |
 | 1.0.5 | **Close** | `done/1.0/`, the post-1.0 map reviewed |
 
 ## Checklist
@@ -45,8 +48,9 @@ Q-4 (the version policy). To be settled here.
 - [ ] every example built **and run** by the harness, so a broken example is a red run
 
 ### 1.0.4 — versioning
-- [ ] Q-4 settled and recorded as a decision
-- [ ] the rule that **adding an error identity is a major version**, because it breaks every consumer's compilation — a rule no other language's library has to have, and the one thing about `ntui` a consumer most needs to know
+- [ ] T-103's policy written into `docs/` and into the repository's release notes
+- [ ] the rule that **adding an error identity is a major version** stated prominently, because it breaks every consumer's compilation — a rule no other language's library has to have, and the one thing about `ntui` a consumer most needs to know
+- [ ] the current error identity count (nine) published beside it, so a consumer can see the budget rather than infer it
 
 ## Gate
 

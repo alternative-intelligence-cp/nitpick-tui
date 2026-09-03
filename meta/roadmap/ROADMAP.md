@@ -3,6 +3,16 @@
 The specification set (`meta/specs/`) is written and the decisions it rests on
 are in `meta/DECISIONS.md`. This is the plan built on them.
 
+**Two decision batches are settled.** T-001 … T-094 were written with the
+specification set; **T-100 … T-112 followed on 2026-09-03**, closing the five
+questions that had been put to the project's author and the eight design calls
+that had carried a recommendation. What remains open in
+`../OPEN_QUESTIONS.md` is open *by design*: three measurements taken in the
+cycles that can take them, one set of data written against real terminals, one
+item gated on the compiler's tooling, one waiting for a consumer to ask, and
+four that are the compiler's rather than ours. **No cycle in this plan is
+blocked on a decision.**
+
 ## How this is organised
 
 - **A cycle is a folder** — `0.0/`, `0.1/`, … — focused on **one topic**.
@@ -217,8 +227,8 @@ policy from Q-4.
 
 | Cycle | Topic |
 |---|---|
-| **1.1** | Image protocols — Kitty graphics, Sixel, iTerm2 inline (Q-3) |
-| **1.2** | The retained layer — an optional component tree above the immediate core, if 0.15 and 1.0's consumers ask for it |
+| **1.1** | Image protocols — Kitty graphics, Sixel, iTerm2 inline (T-102), opening with its own decision batch |
+| **1.2** | The retained layer — an optional component tree above the immediate core, if 0.15 and 1.0's consumers ask for it (O-E2 is the first evidence) |
 | **1.3** | `aarch64` Linux — the syscall numbers differ, the structures do not (T-008) |
 | **1.4** | Verified build — `ntui`'s obligations through the compiler's `npkg verify`, once that reaches libraries |
 

@@ -230,14 +230,14 @@ condition to retry forever.
 
 ## 9. Open items
 
-- **O-E1 — whether `view` should be allowed to fail.** As specified it returns
-  `Result<NIL>` like everything else, and a widget that cannot draw (a
-  malformed UTF-8 label) fails the frame. The alternative is that `view` cannot
-  fail and bad text renders as U+FFFD. Recommendation: `view` may fail, and the
-  *widgets* substitute rather than fail, so the failure path exists but is not
-  the ordinary one.
-- **O-E2 — multiple `Program`s (screens, modals) in one loop.** Composition is
-  currently the application's: it holds its own screen enum and dispatches in
-  `update` and `view`. A `Router` helper is plausible and is deferred until
-  something written against the library asks for it — the library's own
-  examples being the first thing to ask.
+- ~~**O-E1 — whether `view` should be allowed to fail.**~~ — **SETTLED
+  (T-111): it may, and the widgets substitute rather than fail.** The failure
+  path exists for an application that wants it; a malformed UTF-8 label renders
+  as U+FFFD and does not abandon the frame. The two halves answer different
+  questions — "can drawing fail?" and "should a bad byte stop the frame?" — and
+  both answers are needed.
+- **O-E2 — multiple `Program`s (screens, modals) in one loop.** **Open by
+  design.** Composition is the application's: it holds its own screen enum and
+  dispatches in `update` and `view`. A `Router` helper is added when a consumer
+  asks, not in anticipation — and cycle 0.15's application is the first
+  consumer that can ask, so it is revisited in that cycle's triage.

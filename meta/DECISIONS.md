@@ -13,6 +13,14 @@ out to be wrong is superseded by a new one that says so and says why; the old
 text stays, dated, because it records what was true when it was made. This is
 the compiler's D-085/D-202 pattern.
 
+**Numbering is allocation order, grouped by the batch that settled it.**
+T-001…T-094 are the founding batch, written with the specification set and
+organised below by area. T-100 onward are later batches, each appended whole
+with its own heading, because a batch ratified together is a unit and splitting
+it across the areas would lose the fact that one conversation settled all of
+it. This is the compiler's own shape — its D-194…D-200 and D-201…D-209 are
+batches, not areas.
+
 ---
 
 ## Foundations
@@ -526,3 +534,179 @@ prevents.
 `tests/fixtures/input/<terminal>/` exists, its cases pass, and its capability
 row was written from a measured probe transcript rather than from
 documentation. A claim nobody can check is a claim that goes stale silently.
+
+---
+
+# The second batch — ratified 2026-09-03
+
+Thirteen decisions settled in one pass, the day after the founding batch, when
+the recommendations standing in `OPEN_QUESTIONS.md` were accepted as written.
+Five of them (T-100 … T-104) were questions put to the project's author; the
+remaining eight were design calls this project owns and had carried a
+recommendation since the specification set was written.
+
+**What was deliberately NOT settled here**, and why, because a batch that
+settles everything is a batch that guessed: the inline cluster size (O-R1) and
+the renderer's two constants (O-R2) are **measurements**, taken in the cycles
+that can take them; the capability table's contents (O-C1) are **data**,
+written against real terminals; the migration off the harness (O-B1) is
+**gated** on the compiler's tooling; a multi-screen `Router` (O-E2) waits for a
+consumer to ask; and O-N1 … O-N4 are the **compiler's**, not ours to decide.
+
+### T-100 — the Unicode version is the latest stable UCD at cycle 0.2, with 15.1.0 as the floor
+**2026-09-03, settling Q-1 / O-X1.** The version is recorded in exactly one
+file, `src/unicode/version.npk`, as a `pub fixed string:UNICODE_VERSION`, and
+appears in the header comment of every generated table.
+
+**15.1.0 is a hard floor**: below it the `InCB` property does not exist and
+rule GB9c — the Indic conjunct break — cannot be implemented at all, so a
+lower version is not a weaker guarantee but a missing one.
+
+**Upgrading is a decision with a regenerated table set and a re-run golden
+suite**, because a width that changes is a rendering that changes and every
+committed golden encodes the old answer. The cycle that upgrades records the
+diff in cell counts, so an upgrade that moves nothing is visible as such.
+
+### T-101 — `Tree` takes a model trait; it does not ship a node store
+**2026-09-03, settling Q-2 / O-W1.** The widget declares a trait the
+application implements over its own data — children of a node, a node's label,
+whether it has children — rather than an `arena<T>`-backed store the
+application must mirror into.
+
+*Reasoning:* the motivating case is a file browser over a real directory tree,
+and a shipped store would make that program maintain two representations of the
+same hierarchy and keep them in sync. The language's arenas are excellent for
+tree data and remain available to an application that wants one; that is a
+choice the application gets to make.
+
+*Cost accepted:* a trait per model is more ceremony for the trivial case (a
+static menu), and the library's examples carry a small in-memory implementation
+to make that case one line.
+
+### T-102 — image protocols are post-1.0, as cycle 1.1, with their own batch
+**2026-09-03, settling Q-3 / O-W2.** Kitty graphics, Sixel and the iTerm2
+inline protocol are out of scope at 1.0 and are not deferred by silence: they
+are cycle 1.1 in the post-1.0 map, opening with a decision batch of their own.
+
+*Reasoning:* the three protocols disagree about placement, scrolling behaviour
+and image lifetime, and supporting them means the cell model has to learn about
+a screen region it does not own — which touches the renderer's diff, the damage
+model and the scroll path all at once. That is a cycle, not a widget.
+
+`Caps.sixel` is carried from cycle 0.4 so the *detection* is not re-litigated
+when the cycle opens.
+
+### T-103 — versioning, and adding an error identity is a MAJOR version
+**2026-09-03, settling Q-4.**
+
+- `0.x` until the compiler reaches its own 1.0 **and** the API has survived one
+  real application (cycle 0.15's dogfood program). Before that, anything may
+  move.
+- Semantic versioning thereafter.
+- **The `failsafe` arm list is part of the public API.** Adding a public
+  `error:` identity is a **major** version change, because REACH-002 makes it a
+  new mandatory `pick` arm in every consuming program's `failsafe` — a source
+  break in every consumer, enforced by the compiler.
+
+That last rule is the one thing about `ntui` a consumer most needs to know, and
+no library in any other language has to state it. It is published in the 1.0
+contract (`meta/roadmap/1.0/README.md` §1.0.1) and it is the practical teeth
+behind T-018's budget of nine: the budget is not a style guide, it is the thing
+that keeps the major version from moving.
+
+### T-104 — the dogfood application is cycle 0.15, in this repository
+**2026-09-03, settling Q-5.** A real program — a log viewer with search,
+filtering and follow — written against the library as a consumer, in
+`examples/`, before 1.0.
+
+*Reasoning:* an example written by the person who wrote the API is weak
+evidence; it demonstrates the features the author was thinking about. A program
+with a purpose finds what is missing, what is awkward, and what is wrong.
+
+*In this repository, not a separate one*, so it moves with the API and a
+breaking change breaks it in the same commit rather than six months later.
+Every friction it meets is recorded and triaged as a defect, a gap, or an
+accepted cost — and an accepted cost that nobody warned about is a defect in
+the documentation.
+
+### T-105 — `ntui_restore()` does not emit `DECSTR`
+**2026-09-03, settling O-S2.** The restore undoes what `ntui` changed —
+the captured `termios` and the modes in its own bitmask — and nothing else. It
+does not issue a soft reset.
+
+*Reasoning:* a soft reset would also repair modes the **user's shell** set
+deliberately before the program ran, which is the restore's rule (S-2)
+inverted. An application that wants one emits it from its own `failsafe` arm,
+after the restore, where it is that application's decision and is visible as
+such.
+
+### T-106 — the public width API is `text_width` and `cluster_width`
+**2026-09-03, settling O-X2.** `text_width(uint8[]) → uint32` over a string and
+`cluster_width(uint8[]) → uint8` over one cluster. The codepoint form stays
+internal to `src/unicode/`.
+
+*Reasoning:* rules 3 and 4 of the width algorithm (T-022) need the variation
+selector, which is a *later* codepoint in the cluster. A caller holding a bare
+codepoint has already lost the information the algorithm needs, so exposing
+that form would be exposing a function that is wrong for emoji and right for
+nothing the library measures.
+
+### T-107 — no DECRQM probe for `?1049`
+**2026-09-03, settling O-C2.** The alternate screen is not queried. It is
+universal enough that a query costs a parameter in the probe and buys nothing,
+and a terminal without it ignores both the enter and the leave — which is a
+degraded but coherent result, not a corrupted one.
+
+### T-108 — the legacy path does not synthesise `SHIFT`
+**2026-09-03, settling O-I1.** On the legacy encodings a shifted letter arrives
+as `Char('A')` with **no** `MOD_SHIFT`, because the terminal reported no
+modifier and inventing one is a lie a key binding will trip over. The kitty
+protocol reports the unshifted key plus the modifier and is decoded as it
+arrives.
+
+The asymmetry between protocols is **documented rather than papered over in the
+data**, and `key_matches()` is the helper that papers over it *at the point of
+use* — a binding asks "is this Shift+A" and the helper answers correctly under
+either encoding. One place absorbs the difference, and it is the place that
+knows what the question means.
+
+### T-109 — kitty bit 4 is not pushed by default
+**2026-09-03, settling O-I2.** *Report alternate keys* adds the shifted and
+base-layout codepoints to every event. Only a keyboard-remapping application
+needs them, the cost is on every keystroke, and `Caps.kitty_flags` lets such an
+application add it. The default stays `1 | 2 | 8 | 16` = 27 (T-032).
+
+### T-110 — `Min(k)` grows above its floor, like `Fill(1)`
+**2026-09-03, settling O-L1.** A `Min(k)` segment takes at least `k` and then
+participates in the surplus distribution with weight 1.
+
+*Reasoning:* it is what makes `[Min(10), Fixed(3)]` do the obvious thing — the
+first pane takes everything the second does not. The alternative reading —
+`Min` takes exactly its floor unless something forces it wider — produces
+layouts with unexplained trailing gaps, and both readings occur in existing
+libraries, so the choice had to be made and written down rather than
+discovered.
+
+### T-111 — `view` may fail, and widgets substitute rather than fail
+**2026-09-03, settling O-E1.** `view` returns `Result<NIL>` like every other
+function, so the failure path exists and an application can use it. But the
+**widgets** do not take it: malformed text renders as U+FFFD, a control
+character renders as its control picture, an over-large cluster becomes a
+blank. A frame is not abandoned because one label was wrong.
+
+*Reasoning:* the two halves answer different questions. "Can drawing fail?" —
+yes, and pretending otherwise would force a widget to trap where it could
+report. "Should a bad byte in a label stop the frame?" — no, because the frame
+is how the user finds out something is wrong.
+
+### T-112 — `ntui` ships as source
+**2026-09-03, settling O-B2.** Not as an object plus a declaration file.
+
+*Reasoning:* source keeps the closed-world link intact (D-011's
+undefined-symbol scan sees every symbol the program contains) and keeps
+whole-program verification available, which is the point of the language. An
+object would build faster and would put a binary between the consumer and the
+evidence.
+
+*Revisit only if build times become a real complaint*, from someone building
+a real program — not on principle.

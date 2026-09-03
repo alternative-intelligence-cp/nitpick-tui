@@ -291,8 +291,9 @@ constraint, `mode_bits` for the restore mask.
   the resolver's root list. Neither is on the compiler's 1.5 or 1.6 map, so
   this is a request to be made, not a date to wait for. Tracked in
   `../OPEN_QUESTIONS.md` as O-N2.
-- **O-B2 — whether `ntui` ships as source or as an object.** A `.o` plus a
-  declaration file would build faster; source keeps the closed-world link and
-  the whole-program verification story intact, which is worth more. Recorded as
-  settled-for-now in favour of source; revisit only if build times become a
-  real complaint.
+- ~~**O-B2 — whether `ntui` ships as source or as an object.**~~ — **SETTLED
+  (T-112): source.** A `.o` plus a declaration file would build faster and
+  would put a binary between the consumer and the evidence; source keeps the
+  closed-world undefined-symbol scan seeing every symbol the program contains,
+  and keeps whole-program verification available. Revisit only if build times
+  become a real complaint from someone building a real program.
