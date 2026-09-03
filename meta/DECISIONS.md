@@ -792,3 +792,19 @@ pager exercises the screen model and input but almost no widgets, where a log
 viewer with a filter bar and a status line exercises the whole stack. The
 recommendation is therefore its own repository, and the question is recorded
 rather than assumed.
+
+### T-115 — the log viewer takes its own repository, settling O-W4
+**2026-09-03.** Not inside `nitpick-posix` beside `more` and `tail`.
+
+*The argument is about what a dogfood consumer is for.* A pager exercises the
+screen model, the input decoder and the renderer, and **almost no widgets** —
+no layout split, no `List` with a selection, no `TextInput`, no `Scrollbar`, no
+status line, no focus. A log viewer with a filter bar, a search field, a
+follow toggle and a status line exercises the whole stack, which is the only
+reason the cycle exists.
+
+`more` and `tail` remain worth building in `nitpick-posix` **as POSIX
+utilities**, on their own merits and probably in the cycle that does the text
+tools. That they overlap this program is not a reason to merge them: they are
+answering a standard, and this one is answering "is this library actually
+usable".

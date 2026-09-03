@@ -16,8 +16,9 @@ a real program with its own lifetime, and `examples/` would make one that
 outgrows this library move, and one that consumes three libraries pick a
 parent.
 
-**O-W4 is settled at this cycle's open**, before the program exists: its own
-repository, or inside `nitpick-posix` beside `more` and `tail`.
+**O-W4 is settled (T-115): its own repository**, not inside `nitpick-posix`.
+A pager exercises the screen model and almost no widgets; this program has to
+exercise the whole stack or the cycle buys nothing.
 
 The import is by relative path to `../../nitpick-libs/nitpick-tui/src/lib.npk`
 until the compiler's dependency resolution lands (O-N2), with a comment at the
@@ -52,7 +53,7 @@ weak:
 ## Checklist
 
 ### 0.15.0 — the program
-- [ ] the repository created (O-W4 answered first), registered in `nitpick-apps`' `APPS.md`, with its GitHub description and topics set in the same pass
+- [ ] the repository created (T-115: its own), registered in `nitpick-apps`' `APPS.md`, with its GitHub description and topics set in the same pass
 - [ ] written **without changing the library**, so that every friction is recorded rather than smoothed over as it appears
 - [ ] every awkwardness written down as it is met, numbered, with the line of code that caused it
 - [ ] runs over SSH, in `tmux`, in a terminal resized while following, and with a 1 GB log
