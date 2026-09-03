@@ -1,1 +1,60 @@
+# Build output. Never committed — the artifact of record is produced by a clean
+# build, not carried in the tree (BUILD_REFERENCE.md §4.2 in the compiler repo,
+# which this library follows).
+build/
+*.o
+*.a
+
+# Emitted IR. `npkc` writes `.ll` text and the harness assembles it; the text is
+# output, not source. The ONE exception is `tests/fixtures/**/*.ll`, if a
+# hand-written floor test ever needs one — negated below so it stays committed.
+*.ll
+!tests/fixtures/**/*.ll
+
+# Linked programs the harness leaves behind with --keep.
+a.out
+*.bin
+debug_dump.*
+
+# The harness is Python until `npkg` grows generic-project support (the
+# bootstrap/harness -> npkg precedent in the compiler repo). Its bytecode is
+# output.
+__pycache__/
+*.pyc
+*.pyo
+
+# Harness logs and verdict files. A run's transcript is evidence for that run
+# and nothing else; anything worth keeping is written into a roadmap file.
+*.log
+verdicts*.txt
+
+# Gitignored scratch. Never commit anything from here.
 .internal
+
+# Generated Unicode and capability tables are COMMITTED, deliberately — see the
+# "NOT ignored" block below. What is ignored is the raw UCD download the
+# generator reads, which is large, versioned upstream, and reproducible.
+tools/ucd/*.txt
+tools/ucd/*.zip
+
+# Editor and OS residue.
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Claude Code local settings (machine-specific; the shared config is committed).
+.claude/settings.local.json
+
+# NOT ignored, deliberately:
+#   src/unicode/*.npk   — the GENERATED width and segmentation tables. They are
+#                         source: a build must need only the compiler, never a
+#                         Python generator and never a network fetch. The
+#                         generator in tools/ regenerates them and the harness
+#                         checks the committed tables match what it would emit.
+#   src/caps/table.npk  — the generated capability table, for the same reason.
+#   tests/fixtures/     — captured terminal byte streams. They are the input to
+#                         the input-decoder suite and must be byte-stable.
+#   nitpick.lock        — read by every build, written only by `npkg update`.
