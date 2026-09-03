@@ -96,7 +96,7 @@ Plus **T-105** from the second batch: the restore does **not** emit `DECSTR`.
 - [ ] `signalfd4(-1, mask, 8, SFD_CLOEXEC|SFD_NONBLOCK)`
 - [ ] the 128-byte record read, `ssi_signo` at offset 0
 - [ ] several pending signals coalesce correctly — a test sends five `SIGWINCH` and expects one re-query
-- [ ] `SIGPIPE` **not** blocked, and a write to a closed terminal returns `EPIPE` in `Result.err`
+- [ ] `SIGPIPE` **blocked** (T-113), its record drained and discarded, and a test on the **inherited** path that writes to a pipe whose reader has exited and gets `EPIPE` in `Result.err` rather than dying of signal 13
 - [ ] the mask restored by `ntui_restore()`'s caller on the normal path and **not** on the trap path (D-16)
 - [ ] `// stress: 40` on the signal tests
 

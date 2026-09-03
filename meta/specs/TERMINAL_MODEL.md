@@ -274,9 +274,29 @@ bit `n-1` for signal `n`.
 | `SIGTSTP` | 20 | an external suspend request; §8 |
 | `SIGCONT` | 18 | resumed; §8 |
 
-`SIGPIPE` (13) is **not** in the set and is **not** blocked: the language's
-floor already returns `EPIPE` in `Result.err`, and a write to a closed terminal
-is an error the caller handles, not a signal. Nothing else is touched.
+**`SIGPIPE` (13) IS in the set and IS blocked** (T-113), and the reason is
+worth stating because an earlier revision of this section had it backwards.
+
+The runtime installs **no signal disposition for anything** — `runtime/npkrt.ll`
+contains no `rt_sigaction` call at all — so `SIGPIPE`'s default is live, and its
+default is to terminate the process. The compiler's own Bridge records the
+consequence in its source: *"a plain write to a socketpair whose peer died
+raises SIGPIPE, which terminates the runtime by default — the exact event this
+architecture exists to prevent"*, and, a few lines later, *"the first EPIPE
+schedule proved it by taking the whole process down."*
+
+It does not bite on the primary path: a write to a hung-up **tty** returns
+`EIO`, not `SIGPIPE`. It bites on the **inherited** path (D-3), where the
+descriptor is a dup of 2, 1 or 0 and may perfectly well be a pipe or a socket —
+`myapp | head` is the everyday case, and `head` exiting first would kill the
+program outright, without restoring the terminal. `MSG_NOSIGNAL` is no help: it
+is a flag on `send(2)` and this library writes with `write(2)`.
+
+Blocking it is what *makes* the write return `EPIPE`, rather than what merely
+reports it. Its `signalfd` record is drained and **discarded** — it produces no
+event — because the error the caller acts on is the one the write returned.
+
+Nothing else is touched.
 
 **Rule D-16.** The previous mask is saved in the restore record's neighbourhood
 and restored by `ntui_restore()`'s caller on the normal path

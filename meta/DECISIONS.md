@@ -148,8 +148,8 @@ thread for a case the reactor already handles).
 **2026-09-03.** `SIGWINCH`, `SIGTERM`, `SIGHUP`, `SIGINT`, `SIGQUIT`,
 `SIGTSTP` and `SIGCONT` are blocked with `rt_sigprocmask` and read as
 128-byte records from a `signalfd4` descriptor that lives in the reactor beside
-the terminal. `SIGPIPE` is deliberately not in the set: the floor already
-returns `EPIPE` in `Result.err`.
+the terminal. **`SIGPIPE` is in the set too — see T-113**, which corrects this
+entry's original claim that it could safely be left out.
 
 *Reasoning:* the language has no signal-handling facility at all, and adding
 one would mean async-signal-safety questions inside a runtime that allocates.
@@ -710,3 +710,57 @@ evidence.
 
 *Revisit only if build times become a real complaint*, from someone building
 a real program — not on principle.
+
+---
+
+# The third batch — corrections, 2026-09-03
+
+### T-113 — `SIGPIPE` is blocked, correcting T-011's original claim
+**2026-09-03.** T-011's entry, and `TERMINAL_MODEL.md` §5's original D-15, both
+stated that `SIGPIPE` was deliberately left unblocked *"because the floor
+already returns `EPIPE` in `Result.err`."* **That rationale is false.** The
+error was found by the `nitpick-sockets` planning pass, which measured it
+instead of accepting it.
+
+*The measurement:* `runtime/npkrt.ll` contains **no `rt_sigaction` call
+anywhere**. The runtime installs no signal disposition for anything, so
+`SIGPIPE`'s default is live and its default is to terminate the process.
+`lib/nbridge.npk` states the consequence in its own source — it passes
+`MSG_NOSIGNAL` on every send precisely because *"a plain write to a socketpair
+whose peer died raises SIGPIPE, which terminates the runtime by default"* — and
+records that *"the first EPIPE schedule proved it by taking the whole process
+down."*
+
+*Why it did not show up in this library's own reasoning:* the primary path is
+`/dev/tty`, and a write to a hung-up tty returns `EIO`, not `SIGPIPE`. The
+claim was true of the case being thought about and false in general, which is
+the most durable kind of specification error — and the reason this project
+diffs its documents against the thing they describe rather than re-reading
+them.
+
+*Where it actually bites:* the **inherited** path (`TERMINAL_MODEL.md` D-3),
+where the descriptor is a dup of 2, 1 or 0 and may be a pipe or a socket.
+`myapp | head` is the everyday case: `head` exits, the next frame's write
+raises `SIGPIPE`, and the program dies **without restoring the terminal** —
+which is the one failure this library's entire safety story exists to prevent.
+`MSG_NOSIGNAL` does not help, being a flag on `send(2)` where this library uses
+`write(2)`.
+
+*The decision:* `SIGPIPE` joins the blocked set and the `signalfd` watch, and
+its record is **drained and discarded** — it produces no `Event`, because the
+error a caller acts on is the `EPIPE` the write already returned. Blocking is
+what makes that return happen rather than what reports it.
+
+*Alternative declined:* leaving it unblocked and documenting the hazard. A
+library that takes over the terminal and then dies on a broken pipe without
+restoring it has failed at the one thing it promised, and "documented" is not a
+mitigation for that.
+
+*Note on scope, because the sibling library reaches the opposite conclusion and
+both are right:* `nitpick-sockets`' `SK-013` passes `MSG_NOSIGNAL` on every
+send and explicitly declines to change process-wide signal state. That library
+is a passive one that must not alter its host's disposition; this one already
+blocks seven signals, owns the terminal, and restores the mask at teardown and
+around every suspend. The transferable rule is not "block `SIGPIPE`" — it is
+**know what the default disposition is**, and neither library did until it was
+measured.
