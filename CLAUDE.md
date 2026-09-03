@@ -10,6 +10,12 @@ exists yet. The specifications and the plan do.
 
 ## Read these first, in this order
 
+0. **`../PLAYBOOK.md`**, if you have the sibling checkouts — the shared house
+   rules for every Nitpick library, distilled from this one's planning pass:
+   the language constraints that bite, the error-budget rule, the repository
+   and roadmap conventions, and the state of the tooling. It is a workbench
+   document and lives beside the checkouts rather than inside one, because it
+   belongs to none of them.
 1. **`meta/specs/SAFETY.md`** — the constraints and where they come from. Most
    proposals that look reasonable in the abstract die on one of §1's rules.
 2. **`meta/specs/README.md`** — the index and the reading order for the rest.
